@@ -15,6 +15,10 @@ public class GUI implements ActionListener {
     private JTextField jTextField3;
     private JTextField jTextField4;
     private JLabel jLabel;
+    private JLabel pHolder1;
+    private JLabel pHolder2;
+    private JLabel pHolder3;
+    private JLabel pHolder4;
 
     public GUI(){
         frame = new JFrame();
@@ -27,27 +31,38 @@ public class GUI implements ActionListener {
         jTextField2 = new JTextField(20);
         jTextField3 = new JTextField(20);
         jTextField4 = new JTextField(20);
-        jLabel = new JLabel("Please enter user information:", SwingConstants.CENTER);
+        jLabel = new JLabel("Please enter user information:");
+        pHolder2 = new JLabel();
+        pHolder1 = new JLabel();
+        //pHolder3 = new JLabel();
+        //pHolder4 = new JLabel();
         button1.addActionListener(this);
         button2.addActionListener(this);
 
-
+        //mainPanel.add(pHolder3);
+        //mainPanel.add(pHolder4);
         mainPanel.add(button1);
         mainPanel.add(button2);
+        button1.setVerticalAlignment(SwingConstants.CENTER);
+        button2.setVerticalAlignment(SwingConstants.CENTER);
+        altPanel.add(pHolder1);
+        altPanel.add(pHolder2);
         altPanel.add(jLabel);
         altPanel.add(jTextField1);
         altPanel.add(jTextField2);
         altPanel1.add(jTextField3);
         altPanel1.add(jTextField4);
-        mainPanel.setSize(500,500);
+        mainPanel.setSize(500,250);
         mainPanel.setVisible(true);
-        altPanel.setPreferredSize(new Dimension(500,500));
+        altPanel.setLayout(new GridLayout(12,12));
+        altPanel.setPreferredSize(new Dimension(250,250));
         altPanel.setVisible(true);
-        altPanel1.setPreferredSize(new Dimension(500,500));
+        altPanel1.setPreferredSize(new Dimension(250,250));
         altPanel1.setVisible(true);
 
-        frame.add(mainPanel);
-        frame.setMinimumSize(new Dimension(500,500));
+        frame.add(mainPanel, BorderLayout.CENTER);
+        frame.setMinimumSize(new Dimension(500,250));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Piece of Me Banking");
         frame.setLayout(null);
         frame.setVisible(true);
