@@ -6,7 +6,10 @@ public class Main {
     person.setBalance(12.52);
     System.out.println(person.viewBalance());
     System.out.println(person.reportUser());
-
      */
+
+    Banking person1 = new Banking(110,500.0);
+        person1.withdrawBal(60.0);
+        System.out.println(person1.reportUser());
     }
 }
