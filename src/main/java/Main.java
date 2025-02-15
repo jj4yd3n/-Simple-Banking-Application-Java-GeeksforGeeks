@@ -8,8 +8,11 @@ public class Main {
     System.out.println(person.reportUser());
      */
 
+    /* Confirm .withdrawBal() methods works as intended.
     Banking person1 = new Banking(110,500.0);
         person1.withdrawBal(60.0);
         System.out.println(person1.reportUser());
+     */
     }
+
 }

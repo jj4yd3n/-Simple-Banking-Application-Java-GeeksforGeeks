@@ -16,6 +16,7 @@ public class GUI implements ActionListener {
     private JButton depositBttn;
     private JButton withdrawBttn;
     private JButton balanceBttn;
+    private JButton logoutBttn;
     private JTextField jTextField1;
     private JTextField jTextField2;
     private JTextField jTextField3;
@@ -41,6 +42,7 @@ public class GUI implements ActionListener {
         depositBttn = new JButton("Deposit");
         withdrawBttn = new JButton("Withdraw");
         balanceBttn = new JButton("View Balance");
+        logoutBttn = new JButton("Log out");
         jTextField1 = new JTextField(20);
         jTextField2 = new JTextField(20);
         jTextField3 = new JTextField(20);
@@ -57,6 +59,7 @@ public class GUI implements ActionListener {
         balanceBttn.addActionListener(this);
         withdrawBttn.addActionListener(this);
         depositBttn.addActionListener(this);
+        logoutBttn.addActionListener(this);
 
         //MAIN PANEL
         //mainPanel.add(pHolder3);
@@ -89,6 +92,7 @@ public class GUI implements ActionListener {
         bankPanel.add(depositBttn);
         bankPanel.add(withdrawBttn);
         bankPanel.add(balanceBttn);
+        bankPanel.add(logoutBttn);
         bankPanel.setPreferredSize(new Dimension(500,500));
         bankPanel.setVisible(true);
 
@@ -112,10 +116,10 @@ public class GUI implements ActionListener {
         frame.setVisible(true);
         frame.pack();
     }
+    Banking example = new Banking(110,500.0);
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        Banking example = new Banking(110,500.0);
         String s = actionEvent.getActionCommand();
         //CODE FOR "SIGN IN" BUTTON
         if(s.equals("Sign in")){
@@ -129,7 +133,10 @@ public class GUI implements ActionListener {
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "Signed in!");
-                    JOptionPane.showOptionDialog(null, bankPanel, "Welcome, user.", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,null,null,null);
+                    //JOptionPane.showOptionDialog(null, bankPanel, "Welcome, user.", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,null,null,null);
+                    frame.remove(mainPanel);
+                    frame.setContentPane(bankPanel);
+                    frame.revalidate();
                 }
             }
 
@@ -160,20 +167,29 @@ public class GUI implements ActionListener {
             JOptionPane.showMessageDialog(null, "Balance: " + "$" +example.viewBalance());
         }
         else if(s.equals("Deposit")){
-            int response3 = JOptionPane.showOptionDialog(null, depositPanel, "Withdraw", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,null, null,null);
-             if(Double.parseDouble(depField.getText()) > 0){
-                example.depositBal(Double.parseDouble(depField.getText()));
-                JOptionPane.showMessageDialog(null, "Successfuly deposited $" + example.getSum() +"!");
+            int response3 = JOptionPane.showOptionDialog(null, depositPanel, "Deposit", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,null, null,null);
+            if (response3 == JOptionPane.OK_OPTION) {
+                if (Double.parseDouble(depField.getText()) > 10000) {
+                    JOptionPane.showMessageDialog(null, "Please contact your bank for more information.");
+                }
+                else if (Double.parseDouble(depField.getText()) > 0 && Double.parseDouble(depField.getText()) <= 10000) {
+                    example.depositBal(Double.parseDouble(depField.getText()));
+                    JOptionPane.showMessageDialog(null, "Successfuly deposited $" + example.getSum() + "!");
+                } else if (Double.parseDouble(depField.getText()) < 0) {
+                    JOptionPane.showMessageDialog(null, "Please enter a positive double.");
+                } else if (depField.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please enter a double!");
+                } else if (depField.getText() != null) {
+                    JOptionPane.showMessageDialog(null, "Please enter a double!");
+                }
             }
-             else if(Double.parseDouble(depField.getText()) < 0){
-                JOptionPane.showMessageDialog(null, "Please enter a positive double.");
+        }
+        else if(s.equals("Log out")){
+            int response4 = JOptionPane.showOptionDialog(null,"Are you sure you want to log out?","Log out", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null,null, null);
+                if(response4 == JOptionPane.OK_OPTION){
+                    frame.setContentPane(mainPanel);
+                    frame.revalidate();
             }
-            else if(depField.getText().isEmpty()){
-                JOptionPane.showMessageDialog(null,"Please enter a double!");
-            }
-            else if(depField.getText() != null){
-                 JOptionPane.showMessageDialog(null,"Please enter a double!");
-             }
         }
 
     }
