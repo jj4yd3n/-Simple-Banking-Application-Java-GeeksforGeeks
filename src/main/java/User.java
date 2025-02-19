@@ -13,14 +13,25 @@ public class User {
         this.password = password;
     }
 
-    public static void main(String[] args){
+    public void registerUser(String username, String password, Integer accountNo, Double balance){
         String url = "jdbc:mysql://localhost:3306/javaBank";
-        String username = "root";
-        String password = "britneybitch";
+        String u = "root";
+        String p = "britneybitch";
         try {
-            Connection connection = DriverManager.getConnection(url, username, password);
+            Connection connection = DriverManager.getConnection(url, u, p);
             Statement statement = connection.createStatement();
-            statement.executeQuery("SELECT * FROM Accounts");
+            ResultSet resultSet;
+            resultSet = statement.executeQuery("SELECT * FROM Accounts");
+            while(resultSet.next()){
+                String user = resultSet.getString("username");
+                String pass = resultSet.getString("password");
+                Integer accountNo1 = resultSet.getInt("accountNo");
+                System.out.println("Table: " + user + " " + pass + " " + accountNo);
+            }
+            //statement.executeUpdate("INSERT INTO Accounts (username, password, accountNo) VALUES ('Lindsay Lohan', 'ihateparishilton', 121)");
+            resultSet.close();
+            statement.close();
+            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
