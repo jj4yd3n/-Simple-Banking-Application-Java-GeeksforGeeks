@@ -117,12 +117,31 @@ import java.awt.event.ActionListener;
             frame.pack();
         }
         Banking example = new Banking(110,500.0);
+        Account myAccount = new Account();
+        String pass = "";
 
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             String s = actionEvent.getActionCommand();
             //CODE FOR "SIGN IN" BUTTON
-            if(s.equals("Sign in")){
+             if(s.equals("Create account")){
+                int response1 = JOptionPane.showOptionDialog(null, altPanel1, "Create account", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null,null);
+                if(response1 == JOptionPane.OK_OPTION){
+                    if(userBox.getText().isEmpty() || passBox.getText().isEmpty()){
+                        JOptionPane.showMessageDialog(null, "Please type in a username and password.");
+                    }
+                    else{
+                        myAccount.registerUser(userBox.getText(), passBox.getText());
+                        pass = passBox.getText();
+                        JOptionPane.showMessageDialog(null, "Successfully created account!");
+                        frame.remove(mainPanel);
+                        frame.setContentPane(bankPanel);
+                        frame.revalidate();
+
+                    }
+                }
+            }
+            else if(s.equals("Sign in")){
                 int response = JOptionPane.showOptionDialog(null, altPanel, "Sign in", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null,null);
                 if(response == JOptionPane.OK_OPTION){
                     //Does the if statement above work?
@@ -132,31 +151,19 @@ import java.awt.event.ActionListener;
                         JOptionPane.showMessageDialog(null, "Please type in your username and password.");
                     }
                     else{
-                        JOptionPane.showMessageDialog(null, "Signed in!");
-                        //JOptionPane.showOptionDialog(null, bankPanel, "Welcome, user.", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,null,null,null);
-                        frame.remove(mainPanel);
-                        frame.setContentPane(bankPanel);
-                        frame.revalidate();
+                        if(myAccount.checkPass(pass)){
+                            JOptionPane.showMessageDialog(null, "Signed in!");
+                            //JOptionPane.showOptionDialog(null, bankPanel, "Welcome, user.", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,null,null,null);
+                            frame.remove(mainPanel);
+                            frame.setContentPane(bankPanel);
+                            frame.revalidate();
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(null, "Could not sign in! Please try again.");
+                        }
                     }
                 }
 
-            }
-            else if(s.equals("Create account")){
-                int response1 = JOptionPane.showOptionDialog(null, altPanel1, "Create account", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null,null);
-                if(response1 == JOptionPane.OK_OPTION){
-                    if(userBox.getText().isEmpty() || passBox.getText().isEmpty()){
-                        JOptionPane.showMessageDialog(null, "Please type in a username and password.");
-                    }
-                    else{
-                        Account myAccount = new Account(userBox.getText(), passBox.getText());
-                        myAccount.registerUser(userBox.getText(), passBox.getText());
-                        JOptionPane.showMessageDialog(null, "Successfully created account!");
-                        frame.remove(mainPanel);
-                        frame.setContentPane(bankPanel);
-                        frame.revalidate();
-
-                    }
-                }
             }
             //CODE FOR BANKING BUTTONS
             else if(s.equals("Withdraw")){

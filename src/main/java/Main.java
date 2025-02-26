@@ -11,17 +11,10 @@ public class Main {
     new GUI();
     Database database = new Database();
 
-        String pass = "youwantapieceofme";
-        String bcryptHash = BCrypt.withDefaults().hashToString(12,pass.toCharArray());
-
-        System.out.println("Main bcryptHash: " + bcryptHash);
-
-
-        Account myAccount = new Account("Britney Spears", "britneybitch");
-
+        Account myAccount = new Account();
         System.out.println(database.viewDB());
-    myAccount.registerUser("hello", "bitch");
-    System.out.println(myAccount.getBcryptHash());
+    myAccount.registerUser("showman6595", "7Fp6GsXFT4PolV");
+    System.out.println(myAccount.checkPass("7Fp6GsXFT4PolV"));
 
     /* Program can register an account to the database.
     myUser.registerUser("asdfafsd", "asdfasfasddsf", 323);
