@@ -118,6 +118,7 @@ import java.awt.event.ActionListener;
         }
         Banking example = new Banking(110,500.0);
         Account myAccount = new Account();
+        Database database = new Database();
         String pass = "";
 
         @Override
@@ -129,6 +130,9 @@ import java.awt.event.ActionListener;
                 if(response1 == JOptionPane.OK_OPTION){
                     if(userBox.getText().isEmpty() || passBox.getText().isEmpty()){
                         JOptionPane.showMessageDialog(null, "Please type in a username and password.");
+                    }
+                    else if(database.retrieveUsers().equals(userBox.getText())){
+                        JOptionPane.showMessageDialog(null,"Username already taken!");
                     }
                     else{
                         myAccount.registerUser(userBox.getText(), passBox.getText());

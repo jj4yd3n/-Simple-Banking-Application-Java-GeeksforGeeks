@@ -10,11 +10,22 @@ public class Main {
     public static void main(String[] args) {
     new GUI();
     Database database = new Database();
+    String placeUser = "showman6595";
+    boolean userTaken = false;
 
         Account myAccount = new Account();
-        System.out.println(database.viewDB());
-    myAccount.registerUser("showman6595", "7Fp6GsXFT4PolV");
+        System.out.println(database.printDB());
+    //myAccount.registerUser("showman6595", "7Fp6GsXFT4PolV");
+        System.out.println(database.retrieveUsers());
     System.out.println(myAccount.checkPass("7Fp6GsXFT4PolV"));
+
+    if(placeUser.equals(database.retrieveUsers())){
+        userTaken = true;
+        System.out.println("showman6595 is taken: " + userTaken);
+    }
+    else{
+        System.out.println("Something went wrong!");
+    }
 
     /* Program can register an account to the database.
     myUser.registerUser("asdfafsd", "asdfasfasddsf", 323);
