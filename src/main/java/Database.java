@@ -31,7 +31,7 @@ public class Database {
         return contentDB;
     }
 
-    public String retrieveUsers(){
+    public List retrieveUsers(){
         String url = "jdbc:mysql://localhost:3306/javaBank";
         String u = "root";
         String p = "britneybitch";
@@ -50,6 +50,6 @@ public class Database {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return users.toString();
+        return users;
     }
 }

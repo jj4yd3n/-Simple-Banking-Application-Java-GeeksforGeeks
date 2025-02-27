@@ -17,15 +17,6 @@ public class Main {
         System.out.println(database.printDB());
     //myAccount.registerUser("showman6595", "7Fp6GsXFT4PolV");
         System.out.println(database.retrieveUsers());
-    System.out.println(myAccount.checkPass("7Fp6GsXFT4PolV"));
-
-    if(placeUser.equals(database.retrieveUsers())){
-        userTaken = true;
-        System.out.println("showman6595 is taken: " + userTaken);
-    }
-    else{
-        System.out.println("Something went wrong!");
-    }
 
     /* Program can register an account to the database.
     myUser.registerUser("asdfafsd", "asdfasfasddsf", 323);

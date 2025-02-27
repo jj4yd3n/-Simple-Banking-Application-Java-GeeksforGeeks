@@ -131,7 +131,7 @@ import java.awt.event.ActionListener;
                     if(userBox.getText().isEmpty() || passBox.getText().isEmpty()){
                         JOptionPane.showMessageDialog(null, "Please type in a username and password.");
                     }
-                    else if(database.retrieveUsers().equals(userBox.getText())){
+                    else if(database.retrieveUsers().contains(userBox.getText())){
                         JOptionPane.showMessageDialog(null,"Username already taken!");
                     }
                     else{
