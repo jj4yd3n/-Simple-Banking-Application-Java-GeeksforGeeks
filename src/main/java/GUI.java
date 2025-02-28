@@ -17,8 +17,8 @@ import java.awt.event.ActionListener;
         private JButton withdrawBttn;
         private JButton balanceBttn;
         private JButton logoutBttn;
-        private JTextField jTextField1;
-        private JTextField jTextField2;
+        private JTextField loginUserField;
+        private JTextField loginPassField;
         private JTextField userBox;
         private JTextField passBox;
         private JTextField wdrawField;
@@ -43,8 +43,8 @@ import java.awt.event.ActionListener;
             withdrawBttn = new JButton("Withdraw");
             balanceBttn = new JButton("View Balance");
             logoutBttn = new JButton("Log out");
-            jTextField1 = new JTextField(20);
-            jTextField2 = new JTextField(20);
+            loginUserField = new JTextField(20);
+            loginPassField = new JTextField(20);
             userBox = new JTextField(20);
             passBox = new JTextField(20);
             wdrawField = new JTextField(10);
@@ -76,8 +76,8 @@ import java.awt.event.ActionListener;
             altPanel.add(pHolder1);
             altPanel.add(pHolder2);
             altPanel.add(jLabel);
-            altPanel.add(jTextField1);
-            altPanel.add(jTextField2);
+            altPanel.add(loginUserField);
+            altPanel.add(loginPassField);
             altPanel.setLayout(new GridLayout(12,12));
             altPanel.setPreferredSize(new Dimension(250,250));
             altPanel.setVisible(true);
@@ -148,11 +148,11 @@ import java.awt.event.ActionListener;
                     //Does the if statement above work?
                     // System.out.println("User pressed OK.");
                     //Check if username and password boxes are empty. If one of them are, print if statement. IF they are not empty, print else statement.
-                    if(jTextField1.getText().isEmpty() || jTextField2.getText().isEmpty()){
+                    if(loginUserField.getText().isEmpty() || loginPassField.getText().isEmpty()){
                         JOptionPane.showMessageDialog(null, "Please type in your username and password.");
                     }
                     else{
-                        if(myAccount.checkPass(passBox.getText())){
+                        if(myAccount.checkPass(loginUserField.getText(), loginPassField.getText())){
                             JOptionPane.showMessageDialog(null, "Signed in!");
                             //JOptionPane.showOptionDialog(null, bankPanel, "Welcome, user.", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,null,null,null);
                             frame.remove(mainPanel);
@@ -206,6 +206,10 @@ import java.awt.event.ActionListener;
                 }
             }
 
+        }
+
+        public String getUser(){
+            return userBox.getText();
         }
 
 

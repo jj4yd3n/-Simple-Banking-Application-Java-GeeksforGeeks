@@ -52,23 +52,20 @@ public class Database {
         return users;
     }
 
-    public String retrieveUser(String uname){
+    public String retrievePassHash(String uname){
         String url = "jdbc:mysql://localhost:3306/javaBank";
         String u = "root";
         String p = "britneybitch";
-        String retrieveUser = "";
         String retrievePass = "";
         try {
             Connection connection = DriverManager.getConnection(url, u, p);
             Statement statement = connection.createStatement();
             ResultSet resultSet;
-            String sql = "SELECT * FROM Accounts WHERE username = ? and password = ?";
+            String sql = "SELECT * FROM Accounts WHERE username = ?";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1,uname);
-            pstmt.setString(2,retrievePass);
             resultSet = pstmt.executeQuery();
             while(resultSet.next()){
-                retrieveUser = resultSet.getString("username");
                 retrievePass = resultSet.getString("password");
             }
 
@@ -78,6 +75,6 @@ public class Database {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return retrieveUser + retrievePass;
+        return retrievePass;
     }
 }

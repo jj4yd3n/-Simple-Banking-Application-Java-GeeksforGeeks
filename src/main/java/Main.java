@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class Main {
     public static void main(String[] args) {
-    new GUI();
+    GUI gui = new GUI();
         Account myAccount = new Account();
         Database database = new Database();
     String placeUser = "showman6595";
@@ -20,7 +20,8 @@ public class Main {
      */
 
     //System.out.println(myAccount.checkPass(placePass));
-    System.out.println(database.retrieveUser("adfasdfads"));
+    System.out.println(database.retrievePassHash("hello"));
+    System.out.println(gui.getUser());
 
 
 

@@ -1,5 +1,6 @@
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
+import javax.swing.*;
 import javax.xml.crypto.Data;
 import java.sql.*;
 public class Account {
@@ -8,6 +9,7 @@ public class Account {
     private String uname;
     private String pass;
     private String bcryptHash;
+    private BCrypt.Result result;
 
     Database database = new Database();
 
@@ -36,8 +38,12 @@ public class Account {
     }
 
 
-    public boolean checkPass(String user){
-        BCrypt.Result result = BCrypt.verifyer().verify(pass.toCharArray(), bcryptHash);
+    public boolean checkPass(String user, String plainPass){
+        try {
+            result = BCrypt.verifyer().verify(plainPass.toCharArray(), database.retrievePassHash(user));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Could not find account!");
+        }
         return result.verified;
     }
 
