@@ -119,8 +119,6 @@ import java.awt.event.ActionListener;
         Banking example = new Banking(110,500.0);
         Account myAccount = new Account();
         Database database = new Database();
-        String pass = "";
-
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             String s = actionEvent.getActionCommand();
@@ -136,7 +134,6 @@ import java.awt.event.ActionListener;
                     }
                     else{
                         myAccount.registerUser(userBox.getText(), passBox.getText());
-                        pass = passBox.getText();
                         JOptionPane.showMessageDialog(null, "Successfully created account!");
                         frame.remove(mainPanel);
                         frame.setContentPane(bankPanel);
@@ -155,7 +152,7 @@ import java.awt.event.ActionListener;
                         JOptionPane.showMessageDialog(null, "Please type in your username and password.");
                     }
                     else{
-                        if(myAccount.checkPass(pass)){
+                        if(myAccount.checkPass(passBox.getText())){
                             JOptionPane.showMessageDialog(null, "Signed in!");
                             //JOptionPane.showOptionDialog(null, bankPanel, "Welcome, user.", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,null,null,null);
                             frame.remove(mainPanel);

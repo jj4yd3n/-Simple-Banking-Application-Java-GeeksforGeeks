@@ -9,14 +9,22 @@ import java.sql.Statement;
 public class Main {
     public static void main(String[] args) {
     new GUI();
-    Database database = new Database();
+        Account myAccount = new Account();
+        Database database = new Database();
     String placeUser = "showman6595";
+    String placePass = "7Fp6GsXFT4PolV";
     boolean userTaken = false;
 
-        Account myAccount = new Account();
-        System.out.println(database.printDB());
+    /* Retrieve "passwords" column aka BCrypt hases from DB
+    System.out.println(database.retrieveHash());
+     */
+
+    //System.out.println(myAccount.checkPass(placePass));
+    System.out.println(database.retrieveUser("adfasdfads"));
+
+
+
     //myAccount.registerUser("showman6595", "7Fp6GsXFT4PolV");
-        System.out.println(database.retrieveUsers());
 
     /* Program can register an account to the database.
     myUser.registerUser("asdfafsd", "asdfasfasddsf", 323);

@@ -1,5 +1,6 @@
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
+import javax.xml.crypto.Data;
 import java.sql.*;
 public class Account {
     private Integer accountNo;
@@ -7,6 +8,8 @@ public class Account {
     private String uname;
     private String pass;
     private String bcryptHash;
+
+    Database database = new Database();
 
     public void registerUser(String uname, String pass){
         String url = "jdbc:mysql://localhost:3306/javaBank";
@@ -32,7 +35,8 @@ public class Account {
         }
     }
 
-    public boolean checkPass(String pass){
+
+    public boolean checkPass(String user){
         BCrypt.Result result = BCrypt.verifyer().verify(pass.toCharArray(), bcryptHash);
         return result.verified;
     }
