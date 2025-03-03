@@ -3,6 +3,7 @@ public class Banking {
     private Double balance;
     private Double diff;
     private Double sum;
+    private Double recipientBal;
 
     public Banking(Integer accountNo, Double balance){
         this.balance = balance;
@@ -11,6 +12,10 @@ public class Banking {
 
     public void setBalance(Double amount){
         this.balance = amount;
+    }
+
+    public void transferMoney(){
+
     }
 
     public void withdrawBal(Double diff){
@@ -37,4 +42,5 @@ public class Banking {
     public Double viewBalance(){
         return balance;
     }
+
 }

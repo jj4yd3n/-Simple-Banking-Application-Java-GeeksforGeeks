@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Database {
+    String url = "jdbc:mysql://localhost:3306/javaBank";
+    String u = "root";
+    String p = "britneybitch";
     public String printDB(){
-        String url = "jdbc:mysql://localhost:3306/javaBank";
-        String u = "root";
-        String p = "britneybitch";
         String contentDB = "";
         try {
             Connection connection = DriverManager.getConnection(url, u, p);
@@ -31,9 +31,6 @@ public class Database {
     }
 
     public List retrieveUsers(){
-        String url = "jdbc:mysql://localhost:3306/javaBank";
-        String u = "root";
-        String p = "britneybitch";
         List<String> users = new ArrayList<>();
         try {
             Connection connection = DriverManager.getConnection(url, u, p);
@@ -53,9 +50,6 @@ public class Database {
     }
 
     public String retrievePassHash(String uname){
-        String url = "jdbc:mysql://localhost:3306/javaBank";
-        String u = "root";
-        String p = "britneybitch";
         String retrievePass = "";
         try {
             Connection connection = DriverManager.getConnection(url, u, p);
@@ -77,4 +71,5 @@ public class Database {
         }
         return retrievePass;
     }
+
 }

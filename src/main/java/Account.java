@@ -1,32 +1,34 @@
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import javax.swing.*;
-import javax.xml.crypto.Data;
+import java.math.BigDecimal;
 import java.sql.*;
 public class Account {
     private Integer accountNo;
-    private Double balance;
+    private BigDecimal balance;
     private String uname;
     private String pass;
     private String bcryptHash;
     private BCrypt.Result result;
 
+    String url = "jdbc:mysql://localhost:3306/javaBank";
+    String u = "root";
+    String p = "britneybitch";
     Database database = new Database();
+    boolean threwException = false; //Flag to check if checkPass() method threw an exception.
 
-    public void registerUser(String uname, String pass){
-        String url = "jdbc:mysql://localhost:3306/javaBank";
-        String u = "root";
-        String p = "britneybitch";
+    public void registerUser(String uname, String pass, BigDecimal balance){
         bcryptHash = BCrypt.withDefaults().hashToString(12,pass.toCharArray());
         try {
             Connection connection = DriverManager.getConnection(url, u, p);
             Statement statement = connection.createStatement();
             ResultSet resultSet;
-            String getBack = "INSERT INTO Accounts (username, password) VALUES (?,?)";
+            String getBack = "INSERT INTO Accounts (username, password, balance) VALUES (?,?,?)";
             PreparedStatement pstmt = connection.prepareStatement(getBack);
             resultSet = statement.executeQuery("SELECT * FROM Accounts");
             pstmt.setString(1,uname);
             pstmt.setString(2, bcryptHash);
+            pstmt.setBigDecimal(3, balance);
             pstmt.executeUpdate();
 
             resultSet.close();
@@ -38,14 +40,31 @@ public class Account {
     }
 
 
-    public boolean checkPass(String user, String plainPass){
+    public boolean checkPass(String plainPass, String username){
         try {
-            result = BCrypt.verifyer().verify(plainPass.toCharArray(), database.retrievePassHash(user));
+            result = BCrypt.verifyer().verify(plainPass.toCharArray(), database.retrievePassHash(username));
+            //Otherwise, threwException is set to false.
+            threwException = false;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Could not find account!");
+           incorrectErrorDialog();
+           //checkPass threw exception, so set "threwException = false;"
+           threwException = true;
         }
+        System.out.println(result.verified);
         return result.verified;
     }
+
+    //Method to use error message dialog.
+    public void incorrectErrorDialog(){
+        JOptionPane.showMessageDialog(null, "Incorrect username or password!");
+    }
+
+    //Retrieve true or false status of threwException.
+    public boolean getExceptStatus(){
+        return threwException;
+    }
+
+
 
     /* Check if username and password already exists in database
     public boolean checkDupe(){
