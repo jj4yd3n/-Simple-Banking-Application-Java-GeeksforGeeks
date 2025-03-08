@@ -1,5 +1,6 @@
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,6 +12,7 @@ public class Main {
     GUI gui = new GUI();
         Account myAccount = new Account();
         Database database = new Database();
+        Banking banking = new Banking("charlixcx");
     String placeUser = "showman6595";
     String placePass = "7Fp6GsXFT4PolV";
     boolean userTaken = false;
@@ -19,9 +21,25 @@ public class Main {
     System.out.println(database.retrieveHash());
      */
 
-    //System.out.println(myAccount.checkPass(placePass));
-    System.out.println(database.retrievePassHash("hello"));
-    System.out.println(gui.getUser());
+    //System.out.println(myAccount.checkPass(placePass)); //Prints true or false when .checkPass() is called.
+    //System.out.println(database.retrievePassHash("hello")); //Print Bcrypt hash for "hello" account.
+    //System.out.println(gui.getUser()); //Print userBox.getText() from GUI.java
+        /*
+
+        System.out.println(database.getBalance("hello")); // Print balance of "hello" account.
+        banking.depositBal(5000.0);
+        System.out.println(database.getBalance("hello"));
+        System.out.println(banking.viewBalance());
+
+        banking.depositBal(1000.0);
+         */
+
+        /* Testing some methods
+        System.out.println(banking.getBalance());
+        banking.depositBal(BigDecimal.valueOf(2000.0));
+        System.out.println(banking.getBalance());
+         */
+
 
 
 

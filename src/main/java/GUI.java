@@ -27,11 +27,14 @@ public class GUI implements ActionListener {
         private JTextField wdrawField;
         private JTextField depField;
         private JTextField transField;
+        private JTextField recepientField;
         private JLabel jLabel;
         private JLabel pHolder1;
         private JLabel pHolder2;
         private JLabel pHolder3;
         private JLabel pHolder4;
+        private Banking banking;
+        private String username;
 
         public GUI(){
             frame = new JFrame();
@@ -51,7 +54,8 @@ public class GUI implements ActionListener {
             logoutBttn = new JButton("Log out");
             loginUserField = new JTextField("test1",20);
             loginPassField = new JTextField("test",20);
-            transField = new JTextField("");
+            transField = new JTextField(20);
+            recepientField = new JTextField(20);
             userBox = new JTextField(20);
             passBox = new JTextField(20);
             wdrawField = new JTextField(10);
@@ -116,6 +120,7 @@ public class GUI implements ActionListener {
             depositPanel.setVisible(true);
 
             //TRANSFER PANEL
+            transferPanel.add(recepientField);
             transferPanel.add(transField);
             transferPanel.setPreferredSize(new Dimension(250,250));
             transferPanel.setVisible(true);
@@ -130,12 +135,11 @@ public class GUI implements ActionListener {
             frame.setVisible(true);
             frame.pack();
         }
-        Banking example = new Banking(110,500.0);
         Account myAccount = new Account();
         Database database = new Database();
         boolean isAuthenticated = false;
 
-        @Override
+    @Override
         public void actionPerformed(ActionEvent actionEvent) {
             String s = actionEvent.getActionCommand();
             //CODE FOR "SIGN IN" BUTTON
@@ -151,6 +155,8 @@ public class GUI implements ActionListener {
                     else{
                         myAccount.registerUser(userBox.getText(), passBox.getText(), new BigDecimal("1000.0"));
                         JOptionPane.showMessageDialog(null, "Successfully created account!");
+                        username = userBox.getText();
+                        banking = new Banking(username);
                         frame.remove(mainPanel);
                         frame.setContentPane(bankPanel);
                         frame.revalidate();
@@ -171,7 +177,9 @@ public class GUI implements ActionListener {
                             if(myAccount.checkPass(loginPassField.getText(),loginUserField.getText()) && !myAccount.getExceptStatus()){
                             isAuthenticated = true;
                             JOptionPane.showMessageDialog(null, "Signed in!");
-                            frame.remove(mainPanel);
+                            username = loginUserField.getText();
+                             banking = new Banking(username);
+                                frame.remove(mainPanel);
                             frame.setContentPane(bankPanel);
                             frame.revalidate();
                         }
@@ -185,11 +193,27 @@ public class GUI implements ActionListener {
             }
             else if(s.equals("Transfer money")){
                 int response1 = JOptionPane.showOptionDialog(null, transferPanel, "Transfer money", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
-                if(transField.getText().isEmpty()){
-                    JOptionPane.showMessageDialog(null, "Please enter a double!");
+                if(response1 == JOptionPane.OK_OPTION) {
+                    if (transField.getText().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Please enter a double!");
+                    } else if (Double.parseDouble(transField.getText()) < 0) {
+                        JOptionPane.showMessageDialog(null, "Please enter a positive double!");
+                    } else if (!database.retrieveUsers().contains(recepientField.getText())) {
+                        JOptionPane.showMessageDialog(null, "Cannot find account.");
+                    }
+                /* TODO forbid the user from transferring money if they have insufficient funds
+                else if(new BigDecimal(transField.getText()).compareTo(banking.getBalance()))){
+                    JOptionPane.showMessageDialog(null, "Insufficient funds!");
                 }
-                else{
-                    System.out.println("Placeholder!");
+                 */
+                    else {
+                        int confirmTransfer = JOptionPane.showConfirmDialog(null,"Are you sure you want to transfer $" + transField.getText() + "?");
+                        if(confirmTransfer == JOptionPane.YES_OPTION){
+                            JOptionPane.showMessageDialog(null, "Successfully transferred $" + transField.getText() + "!");
+                            banking.transferMoney(new BigDecimal(transField.getText()), recepientField.getText());
+                        }
+                    }
+
                 }
 
              }
@@ -201,12 +225,12 @@ public class GUI implements ActionListener {
                     JOptionPane.showMessageDialog(null, "Please enter a double!");
                 }
                 else if(!wdrawField.getText().isEmpty()){
-                    example.withdrawBal(Double.parseDouble(wdrawField.getText()));
-                    JOptionPane.showMessageDialog(null, "Successfully withdrew " + "$" + example.getDiff() + "!\n Remaining balance is now $" + example.viewBalance());
+                    banking.withdrawBal(new BigDecimal(wdrawField.getText()));
+                    JOptionPane.showMessageDialog(null, "Successfully withdrew " + "$" + banking.getDiff() + "!\n Remaining balance is now $" + banking.getBalance());
                 }
             }
             else if(s.equals("View Balance")){
-                JOptionPane.showMessageDialog(null, "Remaining balance: " + "$" +example.viewBalance());
+                JOptionPane.showMessageDialog(null, "Remaining balance: " + "$" + banking.getBalance());
             }
             else if(s.equals("Deposit")){
                 int response3 = JOptionPane.showOptionDialog(null, depositPanel, "Deposit", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,null, null,null);
@@ -215,8 +239,8 @@ public class GUI implements ActionListener {
                         JOptionPane.showMessageDialog(null, "Please contact your bank for more information.");
                     }
                     else if (Double.parseDouble(depField.getText()) > 0 && Double.parseDouble(depField.getText()) <= 10000) {
-                        example.depositBal(Double.parseDouble(depField.getText()));
-                        JOptionPane.showMessageDialog(null, "Successfuly deposited $" + example.getSum() + "!");
+                        banking.depositBal(new BigDecimal(depField.getText()));
+                        JOptionPane.showMessageDialog(null, "Successfuly deposited $" + banking.getSum() + "!");
                     } else if (Double.parseDouble(depField.getText()) < 0) {
                         JOptionPane.showMessageDialog(null, "Please enter a positive double.");
                     } else if (depField.getText().isEmpty()) {
@@ -237,7 +261,10 @@ public class GUI implements ActionListener {
 
         }
 
-        public String getUser(){
+
+
+
+    public String getUser(){
             return userBox.getText();
         }
 
