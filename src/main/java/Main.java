@@ -12,10 +12,11 @@ public class Main {
     GUI gui = new GUI();
         Account myAccount = new Account();
         Database database = new Database();
-        Banking banking = new Banking("charlixcx");
+        Banking banking = new Banking(102);
     String placeUser = "showman6595";
     String placePass = "7Fp6GsXFT4PolV";
     boolean userTaken = false;
+
 
     /* Retrieve "passwords" column aka BCrypt hases from DB
     System.out.println(database.retrieveHash());

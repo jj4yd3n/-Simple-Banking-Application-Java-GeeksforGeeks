@@ -1,6 +1,3 @@
-import at.favre.lib.crypto.bcrypt.BCrypt;
-
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,15 +28,15 @@ public class Database {
         return contentDB;
     }
 
-    public List retrieveUsers(){
-        List<String> users = new ArrayList<>();
+    public List retrieveAccountNos(){
+        List<Integer> users = new ArrayList<>();
         try {
             Connection connection = DriverManager.getConnection(url, u, p);
             Statement statement = connection.createStatement();
             ResultSet resultSet;
             resultSet = statement.executeQuery("SELECT * FROM Accounts");
             while(resultSet.next()) {
-                 users.add(resultSet.getString("username"));
+                 users.add(resultSet.getInt("accountNo"));
             }
             resultSet.close();
             statement.close();
@@ -72,5 +69,29 @@ public class Database {
         }
         return retrievePass;
     }
+
+    public Integer retriveAccountNo(String username){
+        Integer accountNo = 0;
+        try {
+            Connection connection = DriverManager.getConnection(url, u, p);
+            Statement statement = connection.createStatement();
+            ResultSet resultSet;
+            String sql = "SELECT * FROM Accounts WHERE username = ?";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, username);
+            resultSet = pstmt.executeQuery();
+            while(resultSet.next()){
+                accountNo = resultSet.getInt("accountNo");
+            }
+
+            resultSet.close();
+            statement.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return accountNo;
+    }
+
 
 }

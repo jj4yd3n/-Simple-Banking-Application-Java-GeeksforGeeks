@@ -6,8 +6,8 @@ import java.sql.*;
 public class Account {
     private Integer accountNo;
     private BigDecimal balance;
-    private String uname;
-    private String pass;
+    private String username;
+    private String hashedPassword;
     private String bcryptHash;
     private BCrypt.Result result;
 
@@ -16,8 +16,9 @@ public class Account {
     String p = "britneybitch";
     Database database = new Database();
     boolean threwException = false; //Flag to check if checkPass() method threw an exception.
-
+    boolean isBcryptVerified = false;
     public void registerUser(String uname, String pass, BigDecimal balance){
+        this.username = uname;
         bcryptHash = BCrypt.withDefaults().hashToString(12,pass.toCharArray());
         try {
             Connection connection = DriverManager.getConnection(url, u, p);
@@ -41,17 +42,27 @@ public class Account {
 
 
     public boolean checkPass(String plainPass, String username){
+        this.username = username;
         try {
             result = BCrypt.verifyer().verify(plainPass.toCharArray(), database.retrievePassHash(username));
             //Otherwise, threwException is set to false.
             threwException = false;
+            isBcryptVerified = true;
+
         } catch (Exception e) {
            incorrectErrorDialog();
            //checkPass threw exception, so set "threwException = false;"
            threwException = true;
         }
-        System.out.println(result.verified);
         return result.verified;
+    }
+
+    public boolean getBcryptVerified(){
+        return isBcryptVerified;
+    }
+
+    public String getUsername(){
+        return username;
     }
 
     //Method to use error message dialog.

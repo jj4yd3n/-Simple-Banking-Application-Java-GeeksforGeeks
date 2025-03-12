@@ -8,25 +8,26 @@ public class Banking {
     private BigDecimal sum;
     private BigDecimal amount;
     private BigDecimal recipientBal;
-    private String user;
+    private Integer currentAccountNo;
+    private String currentUsername;
 
     Database database = new Database();
     String url = "jdbc:mysql://localhost:3306/javaBank";
     String u = "root";
     String p = "britneybitch";
 
-    public Banking(String user){
-        this.user = user;
+    public Banking(Integer AccountNo){
+        this.currentAccountNo = AccountNo;
         try {
             Connection connection = DriverManager.getConnection(url, u, p);
             Statement statement = connection.createStatement();
             ResultSet resultSet;
-            String sql = "SELECT * FROM Accounts WHERE username = ?";
+            String sql = "SELECT * FROM Accounts WHERE accountNo = ?";
             PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setString(1, user);
+            pstmt.setInt(1, currentAccountNo);
             resultSet = pstmt.executeQuery();
             while(resultSet.next()){
-                this.user = resultSet.getString("username");
+                this.currentAccountNo = resultSet.getInt("accountNo");
                 this.balance = resultSet.getBigDecimal("balance");
             }
             resultSet.close();
@@ -39,14 +40,13 @@ public class Banking {
 
 
     public BigDecimal getBalance(){
-        balance = BigDecimal.valueOf(0.0);
         try {
             Connection connection = DriverManager.getConnection(url, u, p);
             Statement statement = connection.createStatement();
             ResultSet resultSet;
-            String sql = "SELECT * FROM Accounts WHERE username = ?";
+            String sql = "SELECT * FROM Accounts WHERE accountNo = ?";
             PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setString(1, this.user);
+            pstmt.setInt(1, this.currentAccountNo);
             resultSet = pstmt.executeQuery();
             while(resultSet.next()){
                 balance = resultSet.getBigDecimal("balance");
@@ -61,15 +61,38 @@ public class Banking {
         return balance;
     }
 
-    public BigDecimal getUserBalance(String user){
-        balance = BigDecimal.valueOf(0.0);
+    public BigDecimal doubleBalance(){
+        BigDecimal balance = BigDecimal.valueOf(0.0);
         try {
             Connection connection = DriverManager.getConnection(url, u, p);
             Statement statement = connection.createStatement();
             ResultSet resultSet;
-            String sql = "SELECT * FROM Accounts WHERE username = ?";
+            String sql = "SELECT * FROM Accounts WHERE accountNo = ?";
             PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setString(1, user);
+            pstmt.setInt(1, this.currentAccountNo);
+            resultSet = pstmt.executeQuery();
+            while(resultSet.next()){
+                balance = resultSet.getBigDecimal("balance");
+            }
+
+            resultSet.close();
+            statement.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return balance;
+    }
+
+    public BigDecimal getUserBalance(Integer accountNo){
+        BigDecimal balance = BigDecimal.valueOf(0.0);
+        try {
+            Connection connection = DriverManager.getConnection(url, u, p);
+            Statement statement = connection.createStatement();
+            ResultSet resultSet;
+            String sql = "SELECT * FROM Accounts WHERE accountNo = ?";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, accountNo);
             resultSet = pstmt.executeQuery();
             while(resultSet.next()){
                 balance = resultSet.getBigDecimal("balance");
@@ -85,17 +108,42 @@ public class Banking {
     }
 
 
-    public void transferMoney(BigDecimal amount, String user){
+    public void subtractBalance(BigDecimal amount, Integer user){
+        try {
+            Connection connection = DriverManager.getConnection(url, u, p);
+            Statement statement = connection.createStatement();
+            ResultSet resultSet;
+            String query = "UPDATE Accounts set balance = ? where accountNo = ?";
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            resultSet = statement.executeQuery("SELECT * FROM Accounts");
+            pstmt.setBigDecimal(1, getUserBalance(user).subtract(amount));
+            pstmt.setInt(2, user);
+            pstmt.executeUpdate();
+
+            resultSet.close();
+            statement.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+    public void transferMoney(BigDecimal amount, Integer accountNo){
         this.amount = amount;
         try {
             Connection connection = DriverManager.getConnection(url, u, p);
             Statement statement = connection.createStatement();
             ResultSet resultSet;
-            String query = "UPDATE Accounts set balance = ? where username = ?";
+            String query = "UPDATE Accounts set balance = ? where accountNo = ?";
             PreparedStatement pstmt = connection.prepareStatement(query);
             resultSet = statement.executeQuery("SELECT * FROM Accounts");
-            pstmt.setBigDecimal(1, getUserBalance(user).add(amount));
-            pstmt.setString(2, user);
+            subtractBalance(amount, this.currentAccountNo);
+            pstmt.setBigDecimal(1, getUserBalance(accountNo).add(amount));
+            pstmt.setInt(2, accountNo);
             pstmt.executeUpdate();
 
             resultSet.close();
@@ -113,11 +161,11 @@ public class Banking {
             Connection connection = DriverManager.getConnection(url, u, p);
             Statement statement = connection.createStatement();
             ResultSet resultSet;
-            String getBack = "UPDATE Accounts set balance = ? WHERE username = ?";
+            String getBack = "UPDATE Accounts set balance = ? WHERE accountNo = ?";
             PreparedStatement pstmt = connection.prepareStatement(getBack);
             resultSet = statement.executeQuery("SELECT * FROM Accounts");
             pstmt.setBigDecimal(1, getBalance().subtract(diff));
-            pstmt.setString(2, this.user);
+            pstmt.setInt(2, this.currentAccountNo);
             pstmt.executeUpdate();
 
             resultSet.close();
@@ -134,11 +182,11 @@ public class Banking {
             Connection connection = DriverManager.getConnection(url, u, p);
             Statement statement = connection.createStatement();
             ResultSet resultSet;
-            String getBack = "UPDATE Accounts set balance = ? WHERE username = ?";
+            String getBack = "UPDATE Accounts set balance = ? WHERE accountNo = ?";
             PreparedStatement pstmt = connection.prepareStatement(getBack);
             resultSet = statement.executeQuery("SELECT * FROM Accounts");
             pstmt.setBigDecimal(1, getBalance().add(sum));
-            pstmt.setString(2, this.user);
+            pstmt.setInt(2, this.currentAccountNo);
             pstmt.executeUpdate();
             resultSet.close();
             statement.close();
@@ -159,6 +207,7 @@ public class Banking {
     public BigDecimal getAmount(){
         return amount;
     }
+
 
     public String reportUser(){
         return "Account no. " + accountNo + " has a balance of " + "$" + balance + ".";
