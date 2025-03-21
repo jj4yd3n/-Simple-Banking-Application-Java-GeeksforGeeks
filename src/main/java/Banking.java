@@ -208,6 +208,10 @@ public class Banking {
         return amount;
     }
 
+    public Integer getCurrentAccountNo(){
+        return accountNo;
+    }
+
 
     public String reportUser(){
         return "Account no. " + accountNo + " has a balance of " + "$" + balance + ".";
